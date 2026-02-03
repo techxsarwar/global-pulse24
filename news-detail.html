@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalPulse24 - Article</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        .article-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            background: white;
+            padding: 0 1rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            color: var(--brand-red);
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+
+        .article-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .article-meta {
+            font-family: var(--font-ui);
+            color: #6b7280;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-image {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+            margin-bottom: 2rem;
+        }
+
+        .article-body {
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #374151;
+        }
+
+        .article-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 4rem;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Simplified Header for Detail Page -->
+    <header class="main-header" style="padding: 1rem 0; border-bottom: 4px solid var(--brand-red);">
+        <div class="container header-content" style="justify-content: center;">
+            <a href="index.html" style="text-decoration:none;">
+                <h1 class="logo" style="font-size: 2rem;">GlobalPulse<span class="text-red">24</span></h1>
+            </a>
+        </div>
+    </header>
+
+    <main class="article-container">
+        <a href="index.html" class="back-btn">&larr; Back to Home</a>
+
+        <div id="article-content">
+            <div class="loader">Loading Article...</div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo-sm">GlobalPulse <span class="text-red">24</span>.</h4>
+                <p class="footer-desc">Curating the World’s Headlines for the Next Generation.</p>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Network</h5>
+                <ul class="footer-links">
+                    <li><a href="our-process.html">Our Process</a></li>
+                    <li><a href="sources.html">Source Credits</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                    <li><a href="#">Newsletters</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="corrections.html">Corrections</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Follow Us</h5>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">TW</a>
+                    <a href="#" class="social-icon">YT</a>
+                    <a href="#" class="social-icon">IG</a>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>
+                &copy; 2026 GlobalPulse24 — Student-Led Global News Hub
+                <a href="admin.html" class="secret-lock" title="Admin Panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Detail View Logic
+        async function fetchArticle() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const container = document.getElementById('article-content');
+
+            if (!id) {
+                container.innerHTML = '<div class="loader">Article not found.</div>';
+                return;
+            }
+
+            try {
+                // Fetch all news and find by ID (Since API /news returns all. Ideally we'd have /news/:id)
+                // For this demo, we can just fetch all and find client side (or fetch single if supported)
+                // Let's assume fetch all for simplicity as per current backend.
+                const res = await fetch('http://localhost:5000/api/news');
+                const news = await res.json();
+                const article = news.find(n => n._id === id);
+
+                if (!article) {
+                    container.innerHTML = '<div class="loader">Article not found.</div>';
+                    return;
+                }
+
+                renderArticle(article);
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div class="loader">Error loading article.</div>';
+            }
+        }
+
+        function renderArticle(article) {
+            const container = document.getElementById('article-content');
+
+            // Format content into paragraphs
+            const paragraphs = article.content.split('\n').map(p => p.trim() ? `<p>${p}</p>` : '').join('');
+
+            container.innerHTML = `
+                <article>
+                    <div class="article-header">
+                        <div class="article-meta">
+                            <span class="text-red">${article.category || 'News'}</span> • 
+                            ${new Date(article.createdAt).toLocaleDateString()} • 
+                            ${article.source || 'GlobalPulse24 Staff'}
+                        </div>
+                        <h1 class="article-title">${article.title}</h1>
+                    </div>
+                    
+                    ${article.imageUrl ? `<img src="${article.imageUrl}" alt="${article.title}" class="article-image">` : ''}
+
+                    <div class="article-body">
+                        ${paragraphs}
+                    </div>
+
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <a href="${article.sourceUrl || 'sources.html'}" target="_blank" class="btn btn-red" style="padding: 1rem 2rem; text-decoration: none; color: white; background: var(--brand-red); display: inline-block;">
+                            Read Original Article from ${article.source || 'Source'} &rarr;
+                        </a>
+                        <p style="margin-top: 1rem; font-size: 0.8rem; color: #6b7280;">
+                            *Taking you to the original publisher. GlobalPulse24 claims no rights to this content.
+                        </p>
+                    </div>
+                </article>
+            `;
+
+            // Update Title
+            document.title = `${article.title} - GlobalPulse24`;
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchArticle);
+    </script>
+</body>
+
+</html>

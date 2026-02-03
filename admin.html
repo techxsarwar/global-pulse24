@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalPulse24 - Command Center</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --brand-red: #DC2626;
+            --sidebar-bg: #111827;
+            --main-bg: #F3F4F6;
+            --card-bg: #ffffff;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+        }
+
+        body.dark-mode {
+            --sidebar-bg: #000000;
+            --main-bg: #111827;
+            --card-bg: #1F2937;
+            --text-primary: #F9FAFB;
+            --text-secondary: #9CA3AF;
+            --border-color: #374151;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--brand-red);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #9CA3AF;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-icon {
+            margin-right: 0.75rem;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* MAIN APP */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .welcome-text {
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .live-clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .btn-action {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-action:hover {
+            background-color: var(--border-color);
+        }
+
+        /* SPA SECTIONS */
+        .spa-section {
+            display: none;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .spa-section.active {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* POST LAYOUT (Split View) */
+        .post-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* PREVIEW CARD STYLE */
+        .preview-case {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .preview-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .news-card-preview {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .preview-img {
+            width: 100%;
+            height: 200px;
+            background-color: #f3f4f6;
+            object-fit: cover;
+            display: block;
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .preview-content>div {
+            flex: 1;
+        }
+
+        .preview-cat {
+            color: var(--brand-red);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .preview-title {
+            font-family: 'Merriweather', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .preview-excerpt {
+            color: #4b5563;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-read-more {
+            display: inline-block;
+            background-color: #111827;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            align-self: flex-start;
+            border: none;
+        }
+
+        /* CARD */
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+
+        /* FORMS */
+        .form-group {
+            margin-bottom: 1.25rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            background-color: var(--main-bg);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--brand-red);
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+        }
+
+        .form-textarea {
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .helper-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ACTION BUTTONS */
+        .btn-submit {
+            width: 100%;
+            background-color: var(--brand-red);
+            color: white;
+            border: none;
+            padding: 0.875rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-draft {
+            width: 100%;
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+            padding: 0.875rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+        }
+
+        .btn-draft:hover {
+            background-color: var(--border-color);
+        }
+
+        /* LOGS & FILTERS */
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .logs-table th,
+        .logs-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logs-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .btn-delete {
+            color: #EF4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        .btn-restore {
+            color: #3B82F6;
+            background: rgba(59, 130, 246, 0.1);
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        /* ANALYTICS */
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-num {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--brand-red);
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #10B981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* UTILS */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 4.5em;
+            /* Fallback/Fixed height for 3 lines */
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: scale(0.95);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            background: var(--brand-red);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .modal-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .modal-text {
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <a href="#" class="brand">GlobalPulse<span>24</span></a>
+
+        <div id="nav-post" class="nav-item active">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                </path>
+            </svg>
+            Post News
+        </div>
+        <div id="nav-drafts" class="nav-item">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+            </svg>
+            Drafts
+        </div>
+        <div id="nav-logs" class="nav-item">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                </path>
+            </svg>
+            Recent Activity
+        </div>
+        <div id="nav-analytics" class="nav-item">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                </path>
+            </svg>
+            Analytics
+        </div>
+
+        <div style="flex-grow: 1;"></div>
+
+        <div class="nav-item" id="nav-logout" style="color: #EF4444;">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                </path>
+            </svg>
+            Logout
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="main-content">
+        <header class="header">
+            <div class="welcome-text">Command Center</div>
+            <div class="header-actions">
+                <div id="live-clock" class="live-clock">--:--:--</div>
+                <button class="btn-action" onclick="toggleDarkMode()">&#9790;</button>
+                <a href="index.html" target="_blank" class="btn-action">Live Site &rarr;</a>
+            </div>
+        </header>
+
+        <!-- POST NEWS -->
+        <div id="section-post" class="spa-section active">
+            <div class="post-container">
+                <!-- FORM -->
+                <div class="card">
+                    <h2>Write News</h2>
+                    <form id="admin-form">
+                        <div class="form-group">
+                            <label class="form-label">Headline</label>
+                            <input type="text" id="title" class="form-input" placeholder="Headline..."
+                                oninput="syncPreview()" required>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select id="category" class="form-select" onchange="syncPreview()">
+                                    <option value="World">World</option>
+                                    <option value="Politics">Politics</option>
+                                    <option value="Business">Business</option>
+                                    <option value="Tech">Tech</option>
+                                    <option value="Science">Science</option>
+                                    <option value="Health">Health</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Source</label>
+                                <input type="text" id="source" class="form-input" placeholder="e.g. Reuters"
+                                    oninput="syncPreview()">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Image URL</label>
+                                <input type="url" id="imageUrl" class="form-input" placeholder="https://...">
+                                <div style="font-size:0.7rem; color:#6b7280; margin-top:4px;">
+                                    * For Google Drive, use a <a
+                                        href="https://lh3.googleusercontent.com/d/YOUR_FILE_ID_HERE" target="_blank"
+                                        style="text-decoration:underline;">Direct Link Generator</a>.
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Source Link</label>
+                                <input type="url" id="sourceUrl" class="form-input" placeholder="https://...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Summary</label>
+                            <textarea id="content" class="form-textarea" placeholder="Summary..." maxlength="500"
+                                required oninput="handleSummaryInput()"></textarea>
+                            <div class="helper-row">
+                                <span id="reading-time">~0s read</span>
+                                <div><span id="char-counter">0</span> / 500</div>
+                            </div>
+                        </div>
+                        <button type="submit" id="submit-btn" class="btn-submit">Publish Live</button>
+                        <button type="button" onclick="saveDraft()" class="btn-draft">Save as Draft</button>
+                    </form>
+                </div>
+
+                <!-- PREVIEW -->
+                <div class="preview-case">
+                    <span class="preview-label">Live Card Preview</span>
+                    <div class="news-card-preview">
+                        <div id="prev-placeholder" class="preview-img"
+                            style="display:flex; align-items:center; justify-content:center; background:#f3f4f6; color:#9ca3af; font-size:0.8rem; text-align:center; padding:1rem;">
+                            Image Preview
+                        </div>
+                        <img id="prev-img" src="" class="preview-img" style="display:none;" alt="Preview">
+                        <div class="preview-content">
+                            <div id="prev-cat" class="preview-cat">World</div>
+                            <h3 id="prev-title" class="preview-title">Headline Preview...</h3>
+                            <p id="prev-desc" class="preview-excerpt line-clamp-3">Start typing to see how the card
+                                looks...</p>
+                            <button type="button" class="btn-read-more" onclick="openPreviewModal()">Read More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DRAFTS -->
+        <div id="section-drafts" class="spa-section">
+            <h2 style="margin-bottom: 1.5rem;">Saved Drafts</h2>
+            <div id="drafts-container" class="analytics-grid"
+                style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- LOGS -->
+        <div id="section-logs" class="spa-section">
+            <h2>Activity Logs</h2>
+            <div class="filter-bar">
+                <input type="text" id="search-logs" class="form-input" placeholder="Search headlines..."
+                    style="max-width: 300px;" oninput="loadLogs()">
+                <select id="filter-cat" class="form-select" style="max-width: 200px;" onchange="loadLogs()">
+                    <option value="All">All Categories</option>
+                    <option value="World">World</option>
+                    <option value="Politics">Politics</option>
+                    <option value="Business">Business</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Science">Science</option>
+                    <option value="Health">Health</option>
+                </select>
+            </div>
+            <div class="card">
+                <table class="logs-table">
+                    <thead>
+                        <tr>
+                            <th>Headline</th>
+                            <th>Category</th>
+                            <th>Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logs-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ANALYTICS -->
+        <div id="section-analytics" class="spa-section">
+            <h2>Analytics</h2>
+            <div class="analytics-grid">
+                <div class="card stat-card">
+                    <div class="stat-num" id="stat-total">0</div>
+                    <div class="stat-label">Total Posts</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-num" id="stat-category">--</div>
+                    <div class="stat-label">Top Category</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-num" id="stat-drafts">0</div>
+                    <div class="stat-label">Active Drafts</div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <div id="toast" class="toast">Action Successful!</div>
+
+    <!-- MODAL MARKUP -->
+    <div id="news-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Article Headline</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-img" src="" class="modal-image">
+                <div class="modal-meta">
+                    <span id="modal-cat">CATEGORY</span> &bull;
+                    <span id="modal-source">Source</span>
+                </div>
+                <div id="modal-desc" class="modal-text">
+                    Full description goes here...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="modal-link" href="#" target="_blank" class="btn-read-more" style="background:#DC2626;">Visit
+                    Original Source</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+
+        // --- AUTH & INIT ---
+        const token = sessionStorage.getItem('gp24_token');
+        if (!token) window.location.href = 'login.html';
+
+        function updateClock() {
+            document.getElementById('live-clock').textContent = new Date().toLocaleTimeString();
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function logout() {
+            sessionStorage.removeItem('gp24_token');
+            window.location.href = 'login.html';
+        }
+
+        // --- NAVIGATION ---
+        document.getElementById('nav-post').addEventListener('click', () => switchSection('post'));
+        document.getElementById('nav-drafts').addEventListener('click', () => switchSection('drafts'));
+        document.getElementById('nav-logs').addEventListener('click', () => switchSection('logs'));
+        document.getElementById('nav-analytics').addEventListener('click', () => switchSection('analytics'));
+        document.getElementById('nav-logout').addEventListener('click', logout);
+
+        function switchSection(id) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${id}`).classList.add('active');
+
+            document.querySelectorAll('.spa-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(`section-${id}`).classList.add('active');
+
+            if (id === 'drafts') loadDrafts();
+            if (id === 'logs') loadLogs();
+            if (id === 'analytics') loadAnalytics();
+        }
+
+        // --- PREVIEW & INPUT LOGIC ---
+        function syncPreview() {
+            const title = document.getElementById('title').value;
+            const cat = document.getElementById('category').value;
+            const summary = document.getElementById('content').value;
+
+            document.getElementById('prev-title').textContent = title || 'Headline Preview...';
+            document.getElementById('prev-cat').textContent = cat;
+            document.getElementById('prev-desc').textContent = summary || 'Start typing in the summary box...';
+        }
+
+        // --- SPECIFIC IMAGE LISTENER ---
+        const imgInput = document.getElementById('imageUrl');
+        const prevImg = document.getElementById('prev-img');
+        const prevPlaceholder = document.getElementById('prev-placeholder');
+
+        imgInput.addEventListener('input', function () {
+            const url = this.value.trim();
+            if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+                prevImg.style.display = 'none';
+                prevPlaceholder.style.display = 'flex';
+                prevPlaceholder.textContent = 'Loading...';
+                prevImg.src = url;
+            } else {
+                showPlaceholder('No Image Preview');
+            }
+        });
+
+        prevImg.onload = function () {
+            this.style.display = 'block';
+            prevPlaceholder.style.display = 'none';
+        };
+
+        prevImg.onerror = function () {
+            this.style.display = 'none';
+            showPlaceholder('Preview Not Available');
+        };
+
+        function showPlaceholder(msg) {
+            prevImg.style.display = 'none';
+            prevPlaceholder.style.display = 'flex';
+            prevPlaceholder.textContent = msg;
+        }
+
+        function handleSummaryInput() {
+            const val = document.getElementById('content').value;
+            document.getElementById('char-counter').textContent = val.length;
+            const words = val.trim().split(/\s+/).length;
+            const seconds = Math.ceil(words / 3.5);
+            document.getElementById('reading-time').textContent = val.length > 0 ? `~${seconds}s read` : '~0s read';
+            syncPreview();
+        }
+
+        // --- DATA STORAGE UTILS ---
+        const getLocalLogs = () => JSON.parse(localStorage.getItem('pulse_news_data') || '[]');
+        const setLocalLogs = (data) => localStorage.setItem('pulse_news_data', JSON.stringify(data));
+        const getDrafts = () => JSON.parse(localStorage.getItem('pulse_drafts') || '[]');
+        const setDrafts = (data) => localStorage.setItem('pulse_drafts', JSON.stringify(data));
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg || 'Action Successful!';
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // --- PUBLISH ---
+        document.getElementById('admin-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-btn');
+
+            const activeToken = sessionStorage.getItem('gp24_token');
+            if (!activeToken) return logout();
+
+            btn.disabled = true;
+            btn.textContent = 'PUBLISHING...';
+
+            const item = {
+                id: Date.now().toString(),
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                source: document.getElementById('source').value,
+                imageUrl: document.getElementById('imageUrl').value,
+                sourceUrl: document.getElementById('sourceUrl').value,
+                content: document.getElementById('content').value,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/add-news`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${activeToken}`
+                    },
+                    body: JSON.stringify(item)
+                });
+                if (!res.ok) throw new Error('API Failed');
+
+                const logs = getLocalLogs();
+                logs.unshift(item);
+                setLocalLogs(logs);
+
+                showToast('Published Live!');
+                document.getElementById('admin-form').reset();
+                syncPreview();
+            } catch (e) {
+                alert('Publish Fail: ' + e.message);
+                console.error(e);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Publish Live';
+            }
+        });
+
+        // --- DRAFTS ---
+        function saveDraft() {
+            const item = {
+                id: Date.now().toString(),
+                title: document.getElementById('title').value,
+                category: document.getElementById('category').value,
+                source: document.getElementById('source').value,
+                imageUrl: document.getElementById('imageUrl').value,
+                sourceUrl: document.getElementById('sourceUrl').value,
+                content: document.getElementById('content').value,
+                timestamp: new Date().toISOString()
+            };
+
+            const drafts = getDrafts();
+            drafts.unshift(item);
+            setDrafts(drafts);
+            showToast('Draft Saved!');
+        }
+
+        function loadDrafts() {
+            const drafts = getDrafts();
+            const container = document.getElementById('drafts-container');
+
+            if (drafts.length === 0) {
+                container.innerHTML = '<p class="text-secondary">No drafts saved.</p>';
+                return;
+            }
+
+            container.innerHTML = drafts.map(d => `
+                <div class="card" style="margin:0; display:flex; flex-direction:column;">
+                    <h3 style="margin-top:0; font-size:1rem;">${d.title || 'Untitled Draft'}</h3>
+                    <p style="font-size:0.8rem; color:#6b7280; flex-grow:1;">${d.content.substring(0, 80)}...</p>
+                    <div style="margin-top:1rem;">
+                        <button onclick="restoreDraft('${d.id}')" class="btn-restore">Edit/Publish</button>
+                        <button onclick="deleteDraft('${d.id}')" class="btn-delete">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function restoreDraft(id) {
+            const drafts = getDrafts();
+            const d = drafts.find(x => x.id === id);
+
+            if (d) {
+                document.getElementById('title').value = d.title;
+                document.getElementById('category').value = d.category;
+                document.getElementById('source').value = d.source;
+                document.getElementById('imageUrl').value = d.imageUrl;
+                document.getElementById('sourceUrl').value = d.sourceUrl;
+                document.getElementById('content').value = d.content;
+                syncPreview();
+                handleSummaryInput();
+                switchSection('post');
+            }
+        }
+
+        function deleteDraft(id) {
+            if (!confirm('Delete draft?')) return;
+            const drafts = getDrafts().filter(x => x.id !== id);
+            setDrafts(drafts);
+            loadDrafts();
+        }
+
+        // --- LOGS & FILTERS ---
+        function loadLogs() {
+            let logs = getLocalLogs();
+            const search = document.getElementById('search-logs').value.toLowerCase();
+            const filter = document.getElementById('filter-cat').value;
+
+            logs = logs.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(search);
+                const matchesCat = filter === 'All' || item.category === filter;
+                return matchesSearch && matchesCat;
+            });
+
+            const tbody = document.getElementById('logs-table-body');
+
+            if (logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">No logs found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = logs.map(item => `
+                <tr>
+                    <td><strong>${item.title}</strong></td>
+                    <td><span style="font-size:0.75rem; background:#E5E7EB; padding:2px 6px; border-radius:4px;">${item.category}</span></td>
+                    <td>${new Date(item.timestamp).toLocaleString()}</td>
+                    <td><button class="btn-delete" onclick="deleteLog('${item.id}')">Delete</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteLog(id) {
+            if (!confirm('Local delete only. Confirm?')) return;
+            const logs = getLocalLogs().filter(x => x.id !== id);
+            setLocalLogs(logs);
+            loadLogs();
+        }
+
+        // --- ANALYTICS ---
+        function loadAnalytics() {
+            const logs = getLocalLogs();
+            const drafts = getDrafts();
+
+            document.getElementById('stat-total').textContent = logs.length;
+            document.getElementById('stat-drafts').textContent = drafts.length;
+
+            if (logs.length > 0) {
+                const map = {};
+                logs.forEach(l => map[l.category] = (map[l.category] || 0) + 1);
+                const top = Object.keys(map).reduce((a, b) => map[a] > map[b] ? a : b);
+                document.getElementById('stat-category').textContent = top;
+            } else {
+                document.getElementById('stat-category').textContent = '--';
+            }
+        }
+
+        // --- MODAL ---
+        function openPreviewModal() {
+            const title = document.getElementById('title').value || "Headline Preview";
+            const cat = document.getElementById('category').value;
+            const source = document.getElementById('source').value || "Source";
+            const img = document.getElementById('imageUrl').value;
+            const summary = document.getElementById('content').value || "No summary text provided.";
+            const url = document.getElementById('sourceUrl').value;
+
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-cat').textContent = cat.toUpperCase();
+            document.getElementById('modal-source').textContent = source;
+            document.getElementById('modal-desc').textContent = summary;
+
+            const modalImg = document.getElementById('modal-img');
+            if (img) {
+                modalImg.src = img;
+                modalImg.style.display = 'block';
+            } else {
+                modalImg.style.display = 'none';
+            }
+
+            const modalLink = document.getElementById('modal-link');
+            if (url) {
+                modalLink.href = url;
+                modalLink.style.display = 'inline-block';
+            } else {
+                modalLink.style.display = 'none';
+            }
+
+            document.getElementById('news-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('news-modal').classList.remove('show');
+        }
+    </script>
+</body>
+
+</html>

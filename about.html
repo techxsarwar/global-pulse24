@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - GlobalPulse24</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        .about-hero {
+            padding: 4rem 1rem;
+            text-align: center;
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 3rem;
+        }
+
+        .about-heading {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .about-sub {
+            font-family: var(--font-ui);
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .content-container {
+            max-width: 800px;
+            margin: 0 auto 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .text-block {
+            margin-bottom: 3rem;
+        }
+
+        .text-block h2 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .text-block h2::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--brand-red);
+            margin-top: 0.25rem;
+        }
+
+        .text-block p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: #4b5563;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .process-steps {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .step-card {
+            background: #f3f4f6;
+            padding: 2rem;
+            border-top: 4px solid var(--brand-red);
+            text-align: center;
+        }
+
+        .step-num {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-note {
+            background-color: var(--brand-black);
+            color: white;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="main-header" style="padding: 1rem 0; border-bottom: 4px solid var(--brand-red);">
+        <div class="container header-content" style="flex-direction: row; justify-content: space-between;">
+            <a href="index.html" style="text-decoration:none;">
+                <h1 class="logo" style="font-size: 2rem;">GlobalPulse<span class="text-red">24</span></h1>
+            </a>
+            <div class="header-buttons">
+                <a href="index.html" class="btn btn-outline" style="border:none;">&larr; Back to News</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="about-hero">
+        <h1 class="about-heading">The World, Summarized.</h1>
+        <p class="about-sub">GlobalPulse24 is a student-led initiative dedicated to summarizing the world's most complex
+            news into bite-sized, readable updates for the next generation.</p>
+    </div>
+
+    <main class="content-container">
+        <!-- Mission Section -->
+        <div class="text-block">
+            <h2>Our Mission</h2>
+            <p>We are a team of students and researchers who believe that staying informed shouldn't be a full-time job.
+                In a world overflowing with information, our goal is clarity.</p>
+            <p>We don't send correspondents to the front lines. Instead, we act as a <strong>Global News Hub</strong>,
+                curating stories from the world's most reputable outlets and condensing them into essential, factual
+                summaries. We bridge the gap between complex global events and the busy lives of modern readers.</p>
+        </div>
+
+        <!-- Process Section -->
+        <div class="text-block" id="process">
+            <h2>Our Process</h2>
+            <p>How do we ensure accuracy while prioritizing speed? Our editorial process is built on curation and
+                verification.</p>
+
+            <div class="process-steps">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <div class="step-title">Select</div>
+                    <p style="font-size: 0.9rem; margin:0; font-family: var(--font-ui);">We monitor major global wires
+                        (Reuters, AP, AFP) to identify stories of high public interest.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <div class="step-title">Synthesize</div>
+                    <p style="font-size: 0.9rem; margin:0; font-family: var(--font-ui);">Our team summarizes the key
+                        facts, removing opinion and fluff to get straight to the point.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <div class="step-title">Verify</div>
+                    <p style="font-size: 0.9rem; margin:0; font-family: var(--font-ui);">We cross-reference data points
+                        across multiple sources to ensure our summary is balanced and accurate.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transparency Note -->
+        <div class="text-block">
+            <h2>Transparency & Attribution</h2>
+            <p>GlobalPulse24 is an aggregator and curator. We do not claim original reporting for the underlying events
+                described in our summaries. Every article on our platform includes clear attribution to the original
+                source. We rely on the hard work of journalists on the ground and aim to amplify their stories to a
+                broader audience.</p>
+        </div>
+    </main>
+
+    <!-- Team Note -->
+    <section class="team-note">
+        <div class="container">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; font-family: var(--font-serif);">Driven by Students.
+                fueled by Facts.</h3>
+            <p style="max-width: 600px; margin: 0 auto; color: #9ca3af;">We are a digital-first, remote team of students
+                passionate about media literacy and global affairs.</p>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo-sm">GlobalPulse <span class="text-red">24</span>.</h4>
+                <p class="footer-desc">Curating the World’s Headlines for the Next Generation.</p>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Network</h5>
+                <ul class="footer-links">
+                    <li><a href="our-process.html">Our Process</a></li>
+                    <li><a href="sources.html">Source Credits</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                    <li><a href="#">Newsletters</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="corrections.html">Corrections</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Follow Us</h5>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">TW</a>
+                    <a href="#" class="social-icon">YT</a>
+                    <a href="#" class="social-icon">IG</a>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>
+                &copy; 2026 GlobalPulse24 — Student-Led Global News Hub
+                <a href="admin.html" class="secret-lock" title="Admin Panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
