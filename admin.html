@@ -17,6 +17,7 @@
             --text-primary: #1F2937;
             --text-secondary: #6B7280;
             --border-color: #E5E7EB;
+            --focus-blue: #3B82F6;
         }
 
         body.dark-mode {
@@ -302,8 +303,14 @@
         .form-input:focus,
         .form-textarea:focus {
             outline: none;
+            border-color: var(--focus-blue);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Validation Styling */
+        .form-input:required:invalid:not(:placeholder-shown),
+        .form-textarea:required:invalid:not(:placeholder-shown) {
             border-color: var(--brand-red);
-            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
         }
 
         .form-textarea {
