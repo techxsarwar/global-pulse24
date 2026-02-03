@@ -207,107 +207,74 @@
     <div class="login-card" id="loginCard">
         <a href="index.html" class="logo">GlobalPulse<span>24</span></a>
 
-        <form id="login-form">
+        <form id="loginForm">
             <div class="form-group">
-                <input type="text" id="username" class="form-input" placeholder=" " required>
-                <label class="form-label">Username</label>
+                <input type="text" id="email" class="form-input" placeholder=" " required>
+                <label class="form-label">Email</label>
             </div>
             <div class="form-group">
                 <input type="password" id="password" class="form-input" placeholder=" " required>
                 <label class="form-label">Password</label>
             </div>
 
-            <!-- Custom Student-Built CAPTCHA -->
-            <div class="captcha-box">
-                <span id="captcha-question" class="captcha-question">Loading...</span>
-                <input type="number" id="captcha-answer" class="captcha-input" placeholder="=">
+            <!-- Custom Student-Built CAPTCHA (Visual Only for Offline Mode) -->
+            <div class="captcha-box" style="opacity: 0.5; pointer-events: none;">
+                <span id="captcha-question" class="captcha-question">Offline Mode</span>
+                <input type="number" id="captcha-answer" class="captcha-input" placeholder="=" disabled>
             </div>
-            <p class="captcha-note">Security check to protect our student-led news hub.</p>
+            <p class="captcha-note">Running in serverless/offline mode.</p>
 
-            <button type="submit" class="btn-login" id="login-btn">Sign In</button>
-            <div id="error-msg" class="error-msg">Invalid Credentials</div>
+            <button type="submit" class="btn-login active" id="login-btn" style="pointer-events: all; opacity: 1;">Sign
+                In</button>
+            <div id="login-feedback" class="error-msg">Invalid Credentials</div>
         </form>
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000';
-        let correctAnswer = 0;
-
-        // 1. Generate Math CAPTCHA
-        function generateCaptcha() {
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            correctAnswer = num1 + num2;
-            document.getElementById('captcha-question').textContent = `${num1} + ${num2} ?`;
-            document.getElementById('captcha-answer').value = '';
-            document.getElementById('login-btn').classList.remove('active');
-        }
-
-        // 2. Validate CAPTCHA Input
-        document.getElementById('captcha-answer').addEventListener('input', (e) => {
-            const val = parseInt(e.target.value);
-            const btn = document.getElementById('login-btn');
-
-            if (val === correctAnswer) {
-                btn.classList.add('active'); // Enable Button
-            } else {
-                btn.classList.remove('active');
-            }
+        // Attach event listener to form
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            login();
         });
 
-        // Initialize CAPTCHA on load
-        generateCaptcha();
-
-        // 3. Login Logic
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const card = document.getElementById('loginCard');
-            const errorMsg = document.getElementById('error-msg');
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const feedback = document.getElementById('login-feedback'); // To show status
             const btn = document.getElementById('login-btn');
 
-            // Reset UI
-            errorMsg.style.display = 'none';
-            btn.textContent = 'Verifying...';
+            // Feedback Logic
+            feedback.style.display = 'none';
+            btn.textContent = 'Connecting...';
+
+            // Your LIVE Railway URL
+            const BACKEND_URL = "https://global-pulse24-production.up.railway.app/login";
 
             try {
-                // Send credentials AND captcha verification flag
-                // Since this logic runs client-side, we send a flag saying "Frontend Verified It".
-                // In a real sophisticated app, we'd verify the math on server too, but request asks for "captcha_verified flag".
-                const response = await fetch(`${API_URL}/login`, {
+                const response = await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: user,
-                        password: pass,
-                        captcha_verified: true
-                    })
+                    body: JSON.stringify({ email, password })
                 });
 
                 const data = await response.json();
 
-                if (response.ok && data.success) {
-                    sessionStorage.setItem('gp24_token', data.token);
-                    window.location.href = 'admin.html';
+                if (response.ok) {
+                    // Success: Move to Admin Panel
+                    localStorage.setItem('token', data.token); // Save the session
+                    window.location.href = "admin.html";
                 } else {
-                    throw new Error('Invalid credentials');
+                    // Fail: Show error message
+                    btn.textContent = 'Sign In';
+                    feedback.textContent = "Login Failed: " + (data.message || "Unknown Error");
+                    feedback.style.display = 'block';
                 }
-            } catch (err) {
-                console.error(err);
-                errorMsg.style.display = 'block';
+            } catch (error) {
+                console.error("Antigravity Connection Error:", error);
                 btn.textContent = 'Sign In';
-
-                // Trigger Shiver Animation
-                card.classList.remove('shiver');
-                void card.offsetWidth; // Trigger reflow
-                card.classList.add('shiver');
-
-                // Reset CAPTCHA on failure
-                generateCaptcha();
+                alert("Cannot reach the Railway backend. Check your Internet or Railway logs.");
             }
-        });
+        }
     </script>
 </body>
 

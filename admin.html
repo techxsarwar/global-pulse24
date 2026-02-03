@@ -787,7 +787,9 @@
         const API_URL = 'http://localhost:5000';
 
         // --- AUTH & INIT ---
-        const token = sessionStorage.getItem('gp24_token');
+        // Check for Railway token OR legacy session token
+        const token = localStorage.getItem('token') || sessionStorage.getItem('gp24_token');
+
         if (!token) window.location.href = 'login.html';
 
         function updateClock() {
@@ -803,6 +805,8 @@
 
         function logout() {
             sessionStorage.removeItem('gp24_token');
+            localStorage.removeItem('token');
+            localStorage.removeItem('isLoggedIn');
             window.location.href = 'login.html';
         }
 
