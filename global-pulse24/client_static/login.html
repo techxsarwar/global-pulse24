@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login - GlobalPulse24</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Merriweather:wght@900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --brand-red: #DC2626;
+            --text-black: #111827;
+            --bg-color: #f9fafb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            /* Subtle World Map Pattern simulation using radial gradients */
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .login-card {
+            background: white;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            border-top: 4px solid var(--brand-red);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shiver {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+
+            75% {
+                transform: translateX(-5px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .shiver {
+            animation: shiver 0.3s ease-in-out;
+        }
+
+        .logo {
+            font-family: 'Merriweather', serif;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--text-black);
+            margin-bottom: 2.5rem;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--brand-red);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 0.75rem;
+            border: 1px solid #d1d5db;
+            font-size: 1rem;
+            outline: none;
+            background: transparent;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--brand-red);
+        }
+
+        /* Floating Label Logic */
+        .form-label {
+            position: absolute;
+            left: 0.75rem;
+            top: 1rem;
+            color: #6b7280;
+            pointer-events: none;
+            transition: 0.2s ease all;
+            background: white;
+            padding: 0 0.25rem;
+        }
+
+        .form-input:focus~.form-label,
+        .form-input:not(:placeholder-shown)~.form-label {
+            top: -0.5rem;
+            font-size: 0.75rem;
+            color: var(--brand-red);
+            font-weight: 500;
+        }
+
+        /* CAPTCHA Styles */
+        .captcha-box {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e5e7eb;
+        }
+
+        .captcha-question {
+            font-weight: 700;
+            color: var(--text-black);
+            font-size: 1.1rem;
+            font-family: 'Merriweather', serif;
+        }
+
+        .captcha-input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .captcha-note {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--text-black);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+            opacity: 0.5;
+            pointer-events: none;
+            /* Disabled until CAPTCHA solved */
+        }
+
+        .btn-login.active {
+            opacity: 1;
+            pointer-events: all;
+            background-color: var(--brand-red);
+        }
+
+        .btn-login:hover {
+            background-color: black;
+        }
+
+        .error-msg {
+            color: var(--brand-red);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-card" id="loginCard">
+        <a href="index.html" class="logo">GlobalPulse<span>24</span></a>
+
+        <form id="login-form">
+            <div class="form-group">
+                <input type="text" id="username" class="form-input" placeholder=" " required>
+                <label class="form-label">Username</label>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" class="form-input" placeholder=" " required>
+                <label class="form-label">Password</label>
+            </div>
+
+            <!-- Custom Student-Built CAPTCHA -->
+            <div class="captcha-box">
+                <span id="captcha-question" class="captcha-question">Loading...</span>
+                <input type="number" id="captcha-answer" class="captcha-input" placeholder="=">
+            </div>
+            <p class="captcha-note">Security check to protect our student-led news hub.</p>
+
+            <button type="submit" class="btn-login" id="login-btn">Sign In</button>
+            <div id="error-msg" class="error-msg">Invalid Credentials</div>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        let correctAnswer = 0;
+
+        // 1. Generate Math CAPTCHA
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            correctAnswer = num1 + num2;
+            document.getElementById('captcha-question').textContent = `${num1} + ${num2} ?`;
+            document.getElementById('captcha-answer').value = '';
+            document.getElementById('login-btn').classList.remove('active');
+        }
+
+        // 2. Validate CAPTCHA Input
+        document.getElementById('captcha-answer').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            const btn = document.getElementById('login-btn');
+
+            if (val === correctAnswer) {
+                btn.classList.add('active'); // Enable Button
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Initialize CAPTCHA on load
+        generateCaptcha();
+
+        // 3. Login Logic
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const card = document.getElementById('loginCard');
+            const errorMsg = document.getElementById('error-msg');
+            const btn = document.getElementById('login-btn');
+
+            // Reset UI
+            errorMsg.style.display = 'none';
+            btn.textContent = 'Verifying...';
+
+            try {
+                // Send credentials AND captcha verification flag
+                // Since this logic runs client-side, we send a flag saying "Frontend Verified It".
+                // In a real sophisticated app, we'd verify the math on server too, but request asks for "captcha_verified flag".
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: user,
+                        password: pass,
+                        captcha_verified: true
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    sessionStorage.setItem('gp24_token', data.token);
+                    window.location.href = 'admin.html';
+                } else {
+                    throw new Error('Invalid credentials');
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.style.display = 'block';
+                btn.textContent = 'Sign In';
+
+                // Trigger Shiver Animation
+                card.classList.remove('shiver');
+                void card.offsetWidth; // Trigger reflow
+                card.classList.add('shiver');
+
+                // Reset CAPTCHA on failure
+                generateCaptcha();
+            }
+        });
+    </script>
+</body>
+
+</html>

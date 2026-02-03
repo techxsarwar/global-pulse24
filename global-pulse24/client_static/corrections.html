@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrections - GlobalPulse24</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- UTILITY BAR & HEADER -->
+    <div class="utility-bar">
+        <div class="container utility-flex">
+            <div class="date-display" id="current-date">Fetching Date...</div>
+            <nav class="utility-nav">
+                <a href="category.html?type=world">World</a>
+                <a href="category.html?type=politics">Politics</a>
+                <a href="category.html?type=business">Business</a>
+                <a href="category.html?type=tech">Tech</a>
+                <a href="category.html?type=science">Science</a>
+            </nav>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="container header-grid">
+            <div class="header-left"></div>
+            <div class="header-center">
+                <a href="index.html">
+                    <h1 class="brand-logo">PULSE<span class="text-red">24</span></h1>
+                </a>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-black">Subscribe</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="container main-layout" style="max-width: 800px; margin-bottom: 5rem;">
+
+        <div class="process-header">
+            <h1 class="page-title-lg">Corrections & <span class="text-red">Feedback</span></h1>
+            <p class="page-subtitle">We are committed to accuracy and accountability.</p>
+        </div>
+
+        <section class="text-content-block">
+            <p>
+                Authentic news requires accountability. If you identify a factual error, a misattributed quote, or a
+                significant omission in any of our summaries, please let us know immediately.
+            </p>
+            <p>
+                <strong>Our Commitment:</strong> We pledge to review all error reports and update any confirmed
+                inaccuracies within 24 hours. Code of Ethics dictates that transparency is paramount.
+            </p>
+
+            <div class="contact-card"
+                style="margin-top: 3rem; background: #f9fafb; padding: 2rem; border-left: 4px solid var(--brand-red);">
+                <h3 style="margin-bottom: 1rem; font-family: var(--font-serif);">Submit a Correction</h3>
+                <p style="margin-bottom: 1.5rem; color: #4b5563;">
+                    Email us directly at: <br>
+                    <a href="mailto:corrections@globalpulse24.in"
+                        style="font-weight: 700; color: var(--brand-black); font-size: 1.25rem;">corrections@globalpulse24.in</a>
+                </p>
+
+                <hr style="border: 0; border-top: 1px solid #e5e7eb; margin: 1.5rem 0;">
+
+                <form class="simple-form"
+                    onsubmit="event.preventDefault(); alert('Thank you. We have received your correction request.');">
+                    <div style="margin-bottom: 1rem;">
+                        <label
+                            style="display: block; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.8rem; text-transform: uppercase;">Article
+                            URL (Optional)</label>
+                        <input type="url" placeholder="https://globalpulse24.in/..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; font-family: var(--font-ui);">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label
+                            style="display: block; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.8rem; text-transform: uppercase;">Description
+                            of Error</label>
+                        <textarea rows="4" placeholder="Please describe the inaccuracy..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; font-family: var(--font-ui);"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-black">Submit Report</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4 class="footer-logo-sm">GlobalPulse <span class="text-red">24</span>.</h4>
+                <p class="footer-desc">Curating the World’s Headlines for the Next Generation.</p>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Network</h5>
+                <ul class="footer-links">
+                    <li><a href="our-process.html">Our Process</a></li>
+                    <li><a href="sources.html">Source Credits</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="corrections.html">Corrections</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Follow Us</h5>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">TW</a>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>
+                &copy; 2026 GlobalPulse24 — Student-Led Global News Hub
+                <a href="admin.html" class="secret-lock" title="Admin Panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalPulse24 - Category</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- 1. TOP UTILITY BAR -->
+    <div class="utility-bar">
+        <div class="container utility-flex">
+            <div class="date-display" id="current-date">Fetching Date...</div>
+            <nav class="utility-nav">
+                <a href="category.html?type=world">World</a>
+                <a href="category.html?type=politics">Politics</a>
+                <a href="category.html?type=business">Business</a>
+                <a href="category.html?type=tech">Tech</a>
+                <a href="category.html?type=science">Science</a>
+                <a href="category.html?type=health">Health</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 2. BRANDING HEADER -->
+    <header class="main-header">
+        <div class="container header-grid">
+            <div class="header-left"></div>
+            <div class="header-center">
+                <a href="index.html">
+                    <h1 class="brand-logo">PULSE<span class="text-red">24</span></h1>
+                </a>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-black">Subscribe</button>
+                <button class="btn btn-outline">Newsletter</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. BREAKING NEWS BAR -->
+    <div class="breaking-bar">
+        <div class="container breaking-flex">
+            <span class="breaking-label">BREAKING NEWS</span>
+            <div class="ticker-wrapper">
+                <span id="ticker-text">Loading world headlines...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. BREADCRUMBS -->
+    <div class="container breadcrumb-section">
+        <p class="breadcrumb-text">Home <span class="separator">></span> <span id="breadcrumb-category"
+                class="current">Loading...</span></p>
+    </div>
+
+    <!-- 5. MAIN CONTENT -->
+    <main class="container main-layout">
+
+        <div class="category-page-grid">
+
+            <!-- LEFT: Main Feed -->
+            <section class="main-feed">
+                <h2 class="category-page-title" id="page-title"><span class="accent-bar"></span>Loading...</h2>
+
+                <div id="category-feed-list">
+                    <div class="loader">Fetching News...</div>
+                </div>
+            </section>
+
+            <!-- RIGHT: Sidebar -->
+            <aside class="sidebar-container">
+                <h3 class="section-heading"><span>Trending</span></h3>
+                <div class="sidebar-list" id="trending-list">
+                    <!-- Populated via JS -->
+                </div>
+
+                <!-- Google Auto Ad Placeholder -->
+                <div class="ad-placeholder-clean">
+                    <!-- Advertisement Space -->
+                    <span class="ad-label">Advertisement</span>
+                </div>
+            </aside>
+
+        </div>
+
+    </main>
+
+    <!-- 6. FOOTER -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <!-- Reuse Footer Structure -->
+            <div class="footer-col">
+                <h4 class="footer-logo-sm">GlobalPulse <span class="text-red">24</span>.</h4>
+                <p class="footer-desc">Curating the World’s Headlines for the Next Generation.</p>
+            </div>
+            <!-- Col 2: Network -->
+            <div class="footer-col">
+                <h5 class="footer-title">Network</h5>
+                <ul class="footer-links">
+                    <li><a href="our-process.html">Our Process</a></li>
+                    <li><a href="sources.html">Source Credits</a></li>
+                    <li><a href="disclaimer.html">Disclaimer</a></li>
+                    <li><a href="#">Newsletters</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Support -->
+            <div class="footer-col">
+                <h5 class="footer-title">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="corrections.html">Corrections</a></li>
+                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-title">Follow Us</h5>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">FB</a>
+                    <a href="#" class="social-icon">TW</a>
+                    <a href="#" class="social-icon">YT</a>
+                    <a href="#" class="social-icon">IG</a>
+                </div>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <p>
+                &copy; 2026 GlobalPulse24 — Student-Led Global News Hub
+                <a href="admin.html" class="secret-lock" title="Admin Panel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
