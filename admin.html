@@ -645,7 +645,7 @@
                                 <label class="form-label">Image URL</label>
                                 <input type="url" id="imageUrl" class="form-input" placeholder="https://...">
                                 <div style="font-size:0.7rem; color:#6b7280; margin-top:4px;">
-                                    * For Google Drive, use a <a
+                                    * Must be a direct image link (jpg, png, webp). For Google Drive, use a <a
                                         href="https://lh3.googleusercontent.com/d/YOUR_FILE_ID_HERE" target="_blank"
                                         style="text-decoration:underline;">Direct Link Generator</a>.
                                 </div>
@@ -807,10 +807,16 @@
         document.getElementById('nav-logout').addEventListener('click', logout);
 
         function switchSection(id) {
+            // Remove active from all nav items
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            // Add active to the clicked item
             document.getElementById(`nav-${id}`).classList.add('active');
 
+            // Hide all sections - using 'active' class based on CSS logic
             document.querySelectorAll('.spa-section').forEach(el => el.classList.remove('active'));
+
+            // Show the new section
             document.getElementById(`section-${id}`).classList.add('active');
 
             if (id === 'drafts') loadDrafts();
